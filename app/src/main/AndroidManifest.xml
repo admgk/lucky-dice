@@ -18,10 +18,7 @@
             android:label="@string/title_activity_roll_history"
             android:theme="@style/Theme.LuckyDice" />
         <activity
-            android:name=".ThrowHistory"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".DiceRoll"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.LuckyDice">

@@ -54,21 +54,20 @@ class DiceRoll : ComponentActivity() {
 
                 val navController = rememberNavController()
 
-                NavHost(
-                    navController = navController,
-                    startDestination = DiceRollScreen
-                ) {
-                    composable<DiceRollScreen> {
-                        LuckyDiceApp(navController = navController)
-                    }
-                    composable<RollHistoryScreen> {
-                        RollHistoryApp(navController = navController)
-                    }
-                }
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    LuckyDiceApp(navController = navController)
+                    NavHost(
+                        navController = navController,
+                        startDestination = DiceRollScreen
+                    ) {
+                        composable<DiceRollScreen> {
+                            LuckyDiceApp(navController = navController)
+                        }
+                        composable<RollHistoryScreen> {
+                            RollHistoryApp(navController = navController)
+                        }
+                    }
                 }
             }
         }
