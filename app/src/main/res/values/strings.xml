@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Lucky Dice</string>
+    <string name="title_activity_roll_history">RollHistory</string>
+</resources>
