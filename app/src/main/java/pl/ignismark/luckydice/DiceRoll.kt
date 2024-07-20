@@ -43,6 +43,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.serialization.Serializable
+import pl.ignismark.luckydice.data.DiceRepository
 import pl.ignismark.luckydice.ui.theme.LuckyDiceTheme
 
 class DiceRoll : ComponentActivity() {
@@ -144,7 +145,7 @@ fun DiceRollScreen(
                 }
             }
             Image(
-                painter = painterResource(id = R.drawable.dice_1_6),
+                painter = painterResource(id = DiceRepository.diceSixSides.values.getValue(1)),
                 contentDescription = "dice one of six"
             )
             Spacer(modifier = modifier.height(100.dp))
@@ -189,11 +190,10 @@ fun DiceRollTopBar(
 @Serializable
 object DiceRollScreen
 
-/*
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun RollScreenPreview() {
     LuckyDiceTheme {
-        LuckyDiceApp()
+        LuckyDiceApp(navController = rememberNavController())
     }
-}*/
+}
