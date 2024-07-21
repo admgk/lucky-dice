@@ -1,7 +1,5 @@
 package pl.ignismark.luckydice.data
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import java.time.LocalDateTime
 
 class Dice(
@@ -9,7 +7,6 @@ class Dice(
     val values: List<Int>,
     val graphics: List<Int>
 ) {
-    val sides: Int = values.size
     fun diceRoll(): Result {
         val result = (0..values.lastIndex).random()
 

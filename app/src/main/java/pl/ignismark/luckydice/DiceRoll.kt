@@ -1,6 +1,5 @@
 package pl.ignismark.luckydice
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -29,6 +28,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,14 +39,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
-import androidx.navigation.NavHost
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.serialization.Serializable
 import pl.ignismark.luckydice.data.DiceRepository
+import pl.ignismark.luckydice.data.Result
 import pl.ignismark.luckydice.ui.theme.LuckyDiceTheme
 
 class DiceRoll : ComponentActivity() {
@@ -80,6 +82,8 @@ fun LuckyDiceApp(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
+    var result by remember { mutableStateOf(DiceRepository.diceSixSides.diceRoll()) }
+
     Scaffold(
         topBar = {
             DiceRollTopBar(
@@ -87,7 +91,7 @@ fun LuckyDiceApp(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(onClick = { result = DiceRepository.diceSixSides.diceRoll() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_roll),
                     contentDescription = "twenty"
@@ -97,13 +101,14 @@ fun LuckyDiceApp(
         floatingActionButtonPosition = FabPosition.Center,
         modifier = modifier
     ) { innerPadding ->
-        DiceRollScreen(innerPadding)
+        DiceRollScreen(innerPadding, result)
     }
 }
 
 @Composable
 fun DiceRollScreen(
     paddingValues: PaddingValues,
+    result: Result,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -145,7 +150,7 @@ fun DiceRollScreen(
                 }
             }
             Image(
-                painter = painterResource(id = DiceRepository.diceSixSides.diceRoll().graphic),
+                painter = painterResource(id = result.graphic),
                 contentDescription = "dice one of six"
             )
             Spacer(modifier = modifier.height(100.dp))
