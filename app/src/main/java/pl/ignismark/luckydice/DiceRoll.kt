@@ -145,7 +145,7 @@ fun DiceRollScreen(
                 }
             }
             Image(
-                painter = painterResource(id = DiceRepository.diceSixSides.values.getValue(1)),
+                painter = painterResource(id = DiceRepository.diceSixSides.diceRoll().graphic),
                 contentDescription = "dice one of six"
             )
             Spacer(modifier = modifier.height(100.dp))
