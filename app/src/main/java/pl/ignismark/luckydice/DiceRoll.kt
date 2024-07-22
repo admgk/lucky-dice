@@ -7,26 +7,25 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,11 +33,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -91,10 +90,14 @@ fun LuckyDiceApp(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { result = DiceRepository.diceSixSides.diceRoll() }) {
+            FloatingActionButton(
+                onClick = { result = DiceRepository.diceSixSides.diceRoll() },
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_roll),
-                    contentDescription = "twenty"
+                    contentDescription = null
                 )
             }
         },
@@ -120,40 +123,73 @@ fun DiceRollScreen(
             verticalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Green)
+                .background(MaterialTheme.colorScheme.background)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = dimensionResource(id = R.dimen.small_padding))
             ) {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(
+                    onClick = { /*TODO*/ },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    ),
+                    modifier = Modifier.size(dimensionResource(id = R.dimen.small_component_size))
+
+                ) {
                     Icon(
                         painter = painterResource(id = R.drawable.icon_two),
-                        contentDescription = "two",
-                        modifier = Modifier.size(48.dp)
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(dimensionResource(id = R.dimen.micro_padding))
                     )
                 }
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(
+                    onClick = { /*TODO*/ },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    ),
+                    modifier = Modifier.size(dimensionResource(id = R.dimen.small_component_size))
+
+                ) {
                     Icon(
                         painter = painterResource(id = R.drawable.icon_six),
-                        contentDescription = "six",
-                        modifier = Modifier.size(48.dp)
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(dimensionResource(id = R.dimen.micro_padding))
                     )
                 }
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(
+                    onClick = { /*TODO*/ },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    ),
+                    modifier = Modifier.size(dimensionResource(id = R.dimen.small_component_size))
+
+                ) {
                     Icon(
                         painter = painterResource(id = R.drawable.icon_twenty),
-                        contentDescription = "twenty",
-                        modifier = Modifier.size(48.dp)
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(dimensionResource(id = R.dimen.micro_padding))
                     )
                 }
             }
             Image(
                 painter = painterResource(id = result.graphic),
-                contentDescription = "dice one of six"
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(bottom = dimensionResource(id = R.dimen.centering_padding))
             )
-            Spacer(modifier = modifier.height(100.dp))
         }
     }
 }
@@ -163,20 +199,13 @@ fun DiceRollScreen(
 fun DiceRollTopBar(
     navController: NavController
 ) {
-    TopAppBar(
+    CenterAlignedTopAppBar(
         title = {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                Row {
-                    Text(
-                        text = "Lucky Dice",
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.width(48.dp))
-                }
-            }
+            Text(
+                text = stringResource(id = R.string.app_name),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.displaySmall
+            )
         },
         navigationIcon = {
             IconButton(onClick = {
@@ -185,10 +214,16 @@ fun DiceRollTopBar(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_menu),
-                    contentDescription = "menu"
+                    contentDescription = null,
+                    modifier = Modifier.size(dimensionResource(id = R.dimen.small_component_size))
                 )
             }
-        }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+        )
     )
 }
 
