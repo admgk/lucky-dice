@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +21,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
@@ -34,8 +37,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -49,22 +57,9 @@ import kotlinx.serialization.Serializable
 import pl.ignismark.luckydice.data.Result
 import pl.ignismark.luckydice.data.ResultRepository
 import pl.ignismark.luckydice.ui.theme.LuckyDiceTheme
-
-class RollHistory : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            LuckyDiceTheme {
-/*                Surface(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    RollHistoryApp()
-                }*/
-            }
-        }
-    }
-}
+import pl.ignismark.luckydice.ui.theme.Shapes
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @Composable
 fun RollHistoryApp(
@@ -96,7 +91,7 @@ fun RollHistoryTopBar(
         },
         navigationIcon = {
             IconButton(onClick = {
-                navController.navigate(RollHistoryScreen)
+                navController.navigate(DiceRollScreen)
             }
             ) {
                 Icon(
@@ -124,48 +119,14 @@ fun RollHistoryScreen(
             .padding(paddingValues)
             .fillMaxSize()
     ) {
-        RollResultItem(result = ResultRepository.mockResults[1])
-
-        /*Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Gray)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                IconButton(onClick = { *//*TODO*//* }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.icon_two),
-                        contentDescription = "two",
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
-                IconButton(onClick = { *//*TODO*//* }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.icon_six),
-                        contentDescription = "six",
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
-                IconButton(onClick = { *//*TODO*//* }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.icon_twenty),
-                        contentDescription = "twenty",
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
+        LazyColumn {
+            items(ResultRepository.mockResults) { result ->
+                RollResultItem(
+                    result = result,
+                    modifier = Modifier.padding(dimensionResource(id = R.dimen.micro_padding))
+                )
             }
-            Image(
-                painter = painterResource(id = R.drawable.dice_1_6),
-                contentDescription = "dice one of six"
-            )
-            Spacer(modifier = modifier.height(100.dp))
-        }*/
+        }
     }
 }
 
@@ -174,36 +135,74 @@ fun RollResultItem(
     result: Result,
     modifier: Modifier = Modifier
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     Card(
-        modifier = modifier.fillMaxWidth(),
-        border = BorderStroke(dimensionResource(id = R.dimen.micro_padding), Color.Black)
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { expanded = !expanded },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = dimensionResource(id = R.dimen.micro_padding)
+        ),
+        border = BorderStroke(
+            dimensionResource(id = R.dimen.border_width),
+            MaterialTheme.colorScheme.onSecondaryContainer
+        )
     ) {
         Column {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = dimensionResource(id = R.dimen.medium_padding),
+                        top = dimensionResource(id = R.dimen.medium_padding),
+                        end = dimensionResource(id = R.dimen.medium_padding),
+                        bottom = if (expanded)
+                            dimensionResource(id = R.dimen.zero_padding)
+                            else dimensionResource(id = R.dimen.medium_padding)
+                    )
             ) {
-                Text(text = result.diceName)
-                Text(text = result.value.toString())
+                Text(
+                    text = "${stringResource(id = R.string.dice_label)} ${result.diceName}",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = "${stringResource(id = R.string.value_label)} ${result.value}",
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(end = dimensionResource(id = R.dimen.medium_padding))
+                )
                 Image(
                     painter = painterResource(id = result.graphic),
                     contentDescription = null,
                     modifier = Modifier.size(dimensionResource(id = R.dimen.small_component_size))
                 )
             }
-            Text(text = result.time.toString())
+            if (expanded) {
+                Box(contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            bottom = dimensionResource(id = R.dimen.medium_padding)
+                        )
+                ) {
+                    Text(
+                        text = result.time.format(
+                            DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT,FormatStyle.MEDIUM)
+                        ),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
         }
     }
 }
-
-@Composable
-fun RollResultList() {
-    LazyColumn {
-
-    }
-}
-
 
 @Serializable
 object RollHistoryScreen

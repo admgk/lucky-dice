@@ -2,6 +2,9 @@
 <resources>
     <dimen name="small_component_size">48.dp</dimen>
     <dimen name="centering_padding">256.dp</dimen>
+    <dimen name="medium_padding">12.dp</dimen>
     <dimen name="small_padding">8.dp</dimen>
     <dimen name="micro_padding">4.dp</dimen>
+    <dimen name="zero_padding">0.dp</dimen>
+    <dimen name="border_width">2.dp</dimen>
 </resources>

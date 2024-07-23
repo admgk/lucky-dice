@@ -4,7 +4,7 @@ import pl.ignismark.luckydice.R
 
 object DiceRepository {
     val diceSixSides = Dice(
-        name = "6K",
+        name = "d6",
         values = listOf(1, 2, 3, 4, 5, 6),
         graphics = listOf(
             R.drawable.dice_1_6,
