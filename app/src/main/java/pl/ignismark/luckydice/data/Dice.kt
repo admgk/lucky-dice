@@ -8,14 +8,15 @@ class Dice(
     val graphics: List<Int>
 ) {
     fun diceRoll(): Result {
-        val result = (0..values.lastIndex).random()
-
-        return Result(
+        val resultScore = (0..values.lastIndex).random()
+        val result = Result(
             diceName = name,
-            value = values[result],
-            graphic = graphics[result],
+            value = values[resultScore],
+            graphic = graphics[resultScore],
             time = LocalDateTime.now()
         )
+        saveResult(result)
+        return result
     }
 }
 

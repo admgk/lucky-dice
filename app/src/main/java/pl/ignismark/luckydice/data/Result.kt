@@ -10,3 +10,7 @@ data class Result(
     @DrawableRes val graphic: Int,
     val time: LocalDateTime
 )
+
+fun saveResult(result: Result) {
+    ResultRepository.results.add(0, result)
+}

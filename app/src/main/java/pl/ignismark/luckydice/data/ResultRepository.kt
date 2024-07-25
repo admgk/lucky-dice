@@ -24,4 +24,5 @@ object ResultRepository {
             LocalDateTime.of(2024, 6, 17, 21, 17)
         )
     )
+    val results: MutableList<Result> = mutableListOf()
 }
