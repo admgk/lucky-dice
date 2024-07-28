@@ -1,5 +1,11 @@
 package pl.ignismark.luckydice
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.Spring.DampingRatioLowBouncy
+import androidx.compose.animation.core.Spring.StiffnessLow
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -100,17 +106,37 @@ fun RollHistoryScreen(
     paddingValues: PaddingValues,
     modifier: Modifier = Modifier
 ) {
+    val visibleState = remember {
+        MutableTransitionState(false).apply {
+            targetState = true
+        }
+    }
+
     Surface(
         modifier = modifier
             .padding(paddingValues)
             .fillMaxSize()
     ) {
-        LazyColumn {
-            items(ResultRepository.results) { result ->
-                RollResultItem(
-                    result = result,
-                    modifier = Modifier.padding(dimensionResource(id = R.dimen.micro_padding))
-                )
+        AnimatedVisibility(
+            visibleState = visibleState
+        ) {
+            LazyColumn {
+                items(ResultRepository.results) { result ->
+                    RollResultItem(
+                        result = result,
+                        modifier = Modifier
+                            .padding(dimensionResource(id = R.dimen.micro_padding))
+                            .animateEnterExit(
+                                enter = slideInHorizontally(
+                                    animationSpec = spring(
+                                        stiffness = StiffnessLow,
+                                        dampingRatio = DampingRatioLowBouncy
+                                    ),
+                                    initialOffsetX = { -it / 5 }
+                                )
+                            )
+                    )
+                }
             }
         }
     }
@@ -151,7 +177,7 @@ fun RollResultItem(
                         end = dimensionResource(id = R.dimen.medium_padding),
                         bottom = if (expanded)
                             dimensionResource(id = R.dimen.zero_padding)
-                            else dimensionResource(id = R.dimen.medium_padding)
+                        else dimensionResource(id = R.dimen.medium_padding)
                     )
             ) {
                 Text(
